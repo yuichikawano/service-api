@@ -1,0 +1,25 @@
+{
+    "type": "mysql",
+    "host": "YOUR_DB_HOST",
+    "port": 3306,
+    "username": "YOUR_DB_USERNAME",
+    "password": "YOUR_DB_PASSWORD",
+    "database":"YOUR_DB_PASSWORD",
+      // migrationfileで世代管理するためには、ここをfalseにする必要があります。
+      "synchronize": false,
+      "logging": false,
+      "entities": [
+        "src/entities/*.ts"
+      ],
+      "migrations": [
+        "src/migrations/*.ts"
+      ],
+      "subscribers": [
+        "src/subscribers/*.ts"
+      ],
+      "cli": {
+        "entitiesDir": "src/entities",
+        "migrationsDir": "src/migrations",
+        "subscribersDir": "src/subscribers"
+      }
+  }
