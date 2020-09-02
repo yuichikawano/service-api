@@ -1,0 +1,9 @@
+{
+  "tsconfig": "tsconfig.json",
+  "assetsFolder": "assets",
+  "unitTestCoverage": ".pages/cov/coverage-summary.json",
+  "name": "pcr test",
+  "output": ".pages/doc",
+  "port": 3008,
+  "theme": "laravel"
+}

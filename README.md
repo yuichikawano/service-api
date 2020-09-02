@@ -1,75 +1,113 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
-
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
 ## Installation
 
+### Install Dependency Library
+Run in shell
 ```bash
-$ npm install
+yarn install
 ```
+
+Run in MySQL
+
+```sql
+create database cuc_pcr_test;
+```
+
+### この環境でのみ使われる環境変数の定義
+`.env.local` ファイルを作成し、そこに設定した環境変数は優先して読み込まれます。  
+このファイルは `.gitignore` に追加されているのでファイルは追跡されません。
+STAGEやPORTの値を設定したい場合などに使います。
+
+```bash
+cp config/example.env.local config/.env.local
+vim config/.env.local
+```
+
+```dotenv
+# config/.env.local
+
+STAGE=prod
+```
+
+### Migration
+
+開発環境など `devDependencies` も含まれる環境であればts-nodeを使うことで、ビルドを行わずにマイグレーション用のファイルを作成することができます。  
+開発環境で使えるコマンドは以下のものです。
+
+```bash
+yarn typeorm
+yarn typeorm:create
+yarn typeorm:up
+yarn typeorm:down
+```
+
+本番環境ではtypescriptのビルド環境が含まれていないため、ビルド済みのコードからマイグレーションを実行する必要があるため、コマンドが変わります。  
+以下のコマンドが使用可能です。
+
+```bash
+yarn typeorm:prod
+yarn typeorm:prod:create
+yarn typeorm:prod:up
+yarn typeorm:prod:down
+```
+
+#### 実行例
+
+```bash
+# create entities and database difference file
+yarn typeorm:create migration_name_is_here
+
+# 自動生成されるコードは大抵崩れているのでcode formatterをかける
+yarn fix
+
+# adapting the latest migrations
+yarn typeorm:up
+```
+
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+yarn start
 
-# watch mode
-$ npm run start:dev
+# build
+yarn build
 
-# production mode
-$ npm run start:prod
+# Start in production mode (need to build it before running)
+yarn start:prod
 ```
 
 ## Test
 
 ```bash
-# unit tests
-$ npm run test
+# unit tests running all
+yarn test
+
+# execute interactive
+yarn test:watch
 
 # e2e tests
-$ npm run test:e2e
+yarn test:e2e
 
 # test coverage
-$ npm run test:cov
+yarn test:cov
+
+# open coverage result page
+yarn test:cov:result
 ```
 
-## Support
+## Tips
+### MySQL8.0への対応 
+```
+ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Node.jsで使用している `mysql` モジュールは現在MySQL8.0で変更されたパスワードの認証方法に対応していません。  
+MySQLの認証方法を `mysql_native_password` に変更することで対処可能です。
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).
+```sql
+ALTER USER 'ns_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'sM5T$e7D4';
+``` 
