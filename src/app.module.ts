@@ -8,21 +8,20 @@ import { UserService } from './user/user.service'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 // DB_URL="mysql://ns_user:sM5T\\$e7D4@localhost/cuc_pcr_test"
-
+import * as path from 'path'
 @Module({
     imports: [
-        // TypeOrmModule.forRoot({
-        //   type: 'mysql',
-        //   host: 'localhost',
-        //   port: 3306,
-        //   username: 'root',
-        //   password: 'do0514mysql',
-        //   database: 'service_dev',
-        //   entities: [],
-        //   synchronize: true,
-        // }),
-        TypeOrmModule.forRoot(),
-        // UserModule,
+        TypeOrmModule.forRoot({
+            type: 'mysql',
+            host: 'localhost',
+            port: 3306,
+            username: 'root',
+            password: 'do0514mysql',
+            database: 'service_dev',
+            entities: [path.resolve(__dirname, '**/*.entity{.ts,.js}')],
+            synchronize: true,
+        }),
+        UserModule,
         // TypeOrmModule.forRoot(ormConfig as TypeOrmModuleOptions)
     ],
     controllers: [AppController],
